@@ -1,12 +1,14 @@
 package sample.Utils;
 
-import sample.Entities.AnalyzedLogFile;
-import sample.Entities.AnalyzedWord;
 import sample.Entities.Log;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AnalysisUtils {
+    private static Pattern datePattern = Pattern.compile("\\d\\d\\d\\d-\\d\\d-\\d\\d");
+
     public static HashMap<String, Integer> countWords(ArrayList<Log> logs) {
         HashMap<String, Integer> count = new HashMap<>();
 
@@ -53,9 +55,16 @@ public class AnalysisUtils {
 
     public static ArrayList<Log> parseLines(ArrayList<String> lines) {
         ArrayList<Log> logs = new ArrayList<>();
-        String[] date = lines.get(0).substring(15, 25).split("-");
+        Matcher m = datePattern.matcher(lines.get(0));
 
-        Calendar cal = new GregorianCalendar(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]));
+        Calendar cal;
+
+        if(m.find()){
+            String[] date = m.group().split("-");
+            cal = new GregorianCalendar(Integer.parseInt(date[0]), Integer.parseInt(date[1])-1, Integer.parseInt(date[2]));
+        }else{
+            cal = Calendar.getInstance();
+        }
 
         Log current;
         for (int i = 0; i < lines.size(); i++) {
@@ -66,5 +75,16 @@ public class AnalysisUtils {
         }
 
         return logs;
+    }
+
+    public static boolean isCapsLocked(String comment){
+        for(char c: comment.toCharArray()){
+            if(Character.isAlphabetic(c)){
+                if(!Character.isUpperCase(c)){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

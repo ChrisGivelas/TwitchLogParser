@@ -1,13 +1,17 @@
 package sample.Controllers;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import sample.Entities.AnalyzedLogFile;
 import sample.Entities.AnalyzedWord;
+import sample.Entities.HypeMoment;
 import sample.Entities.Log;
 import sample.Utils.AnalysisUtils;
 import sample.Utils.FileUtils;
@@ -32,6 +36,29 @@ public class Main {
 
     @FXML
     Button upload = new Button();
+
+    @FXML
+    MenuButton analyzedFileMenu = new MenuButton();
+
+    @FXML
+    ListView<HypeMoment> hypeList = new ListView<>();
+
+    @FXML
+    private void onMenuChange(ActionEvent e) {
+        MenuItem selected = (MenuItem) e.getSource();
+
+        analyzedFileMenu.setText(selected.getText());
+
+        if (selected.getText().equalsIgnoreCase("Word Count")) {
+            wordList.setVisible(true);
+            hypeList.setVisible(false);
+
+        } else {
+            wordList.setVisible(false);
+            hypeList.setVisible(true);
+        }
+
+    }
 
     @FXML
     private void onUpload() {
@@ -70,6 +97,7 @@ public class Main {
         String file = fileList.getSelectionModel().getSelectedItem();
         currentlySelectedFile = analyzedLogFiles.get(file);
         wordList.setItems(FXCollections.observableArrayList(currentlySelectedFile.getSortedWordCounts()));
+        hypeList.setItems(FXCollections.observableArrayList(currentlySelectedFile.getHypeMoments()));
     }
 
     @FXML
@@ -94,6 +122,33 @@ public class Main {
 
             Word controller = loader.getController();
             controller.initData(currentlySelectedWord);
+
+            stage.show();
+        } catch (IOException i) {
+            System.out.println("Error!");
+        }
+    }
+
+    @FXML
+    private void onSelectHype() {
+        HypeMoment hypeMoment = hypeList.getSelectionModel().getSelectedItem();
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/sample/hype.fxml"
+                )
+        );
+
+        Parent root;
+        try {
+            root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Hype Moment");
+            stage.setScene(new Scene(root, 600, 400));
+
+            Hype controller = loader.getController();
+            controller.initData(hypeMoment);
 
             stage.show();
         } catch (IOException i) {
