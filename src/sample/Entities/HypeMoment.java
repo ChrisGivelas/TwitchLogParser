@@ -7,7 +7,8 @@ import java.util.Calendar;
 public class HypeMoment {
     public static final int MIN_LOGS = 4;
 
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("[hh:mm:ss]");
+    private static SimpleDateFormat timestampFormat = new SimpleDateFormat("[kk:mm:ss]");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private ArrayList<Log> logs;
 
@@ -34,6 +35,6 @@ public class HypeMoment {
 
     @Override
     public String toString(){
-        return "Count: " + logs.size() + "\nRange: " + dateFormat.format(getMinTimestamp().getTime()) + " - " + dateFormat.format(getMaxTimestamp().getTime());
+        return "Date: "+ dateFormat.format(getMinTimestamp().getTime()) + "\nRange: " + timestampFormat.format(getMinTimestamp().getTime()) + " - " + timestampFormat.format(getMaxTimestamp().getTime()) + "\nCount: " + logs.size();
     }
 }

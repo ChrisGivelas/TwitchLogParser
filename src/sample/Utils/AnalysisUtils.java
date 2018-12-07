@@ -35,7 +35,7 @@ public class AnalysisUtils {
 
         Calendar clone = (Calendar) cal.clone();
 
-        clone.add(Calendar.HOUR, Integer.parseInt(timestamp[0]));
+        clone.add(Calendar.HOUR_OF_DAY, Integer.parseInt(timestamp[0]));
         clone.add(Calendar.MINUTE, Integer.parseInt(timestamp[1]));
         clone.add(Calendar.SECOND, Integer.parseInt(timestamp[2]));
 

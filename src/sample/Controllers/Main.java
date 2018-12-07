@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+    private FileChooser fc;
+
     private HashMap<String, AnalyzedLogFile> analyzedLogFiles = new HashMap<>();
 
     private AnalyzedLogFile currentlySelectedFile;
@@ -44,6 +46,14 @@ public class Main {
     ListView<HypeMoment> hypeList = new ListView<>();
 
     @FXML
+    private void initialize(){
+        fc = new FileChooser();
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Twitch log files (.txt /.log)", "*.txt", "*.log")
+        );
+    }
+
+    @FXML
     private void onMenuChange(ActionEvent e) {
         MenuItem selected = (MenuItem) e.getSource();
 
@@ -62,11 +72,13 @@ public class Main {
 
     @FXML
     private void onUpload() {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Twitch log files (.txt /.log)", "*.txt", "*.log")
-        );
         File f = fc.showOpenDialog(upload.getScene().getWindow());
+
+        if(f == null){
+            return;
+        }
+
+        fc.setInitialDirectory(new File(f.getParent()));
 
         String fileDisplayName = f.getName() + " (" + f.getAbsolutePath() + ")";
 
