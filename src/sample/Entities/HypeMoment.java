@@ -3,6 +3,7 @@ package sample.Entities;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 
 public class HypeMoment {
     public static final int MIN_LOGS = 4;
@@ -14,7 +15,7 @@ public class HypeMoment {
 
     public HypeMoment(ArrayList<Log> logs) {
         this.logs = logs;
-        this.logs.sort((o1, o2) -> o2.getCal().compareTo(o1.getCal()));
+        this.logs.sort(Comparator.comparing(Log::getCal));
     }
 
     public ArrayList<Log> getLogs() {
